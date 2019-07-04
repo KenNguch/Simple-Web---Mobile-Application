@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         myWebView.getSettings().setLoadWithOverviewMode(true);
 
         final ProgressDialog progressBar = new ProgressDialog(MainActivity.this);
-        progressBar.setMessage("Lease Wait While We Process Your Request");
+        progressBar.setMessage("Please Wait While We Process Your Request");
 
         myWebView.loadUrl("https://murmuring-woodland-75772.herokuapp.com");
 
