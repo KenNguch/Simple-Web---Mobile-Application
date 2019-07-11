@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -29,27 +30,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        myWebView = (WebView) findViewById(R.id.webView);
 
         trigger();
-
-
     }
 
     private void trigger() {
-
         if (NetworkStatus.getInstance(this).isOnline()) {
             myWebView();
         } else {
-
             showDialog();
         }
-
     }
 
     private void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please Connect To Internet")
+        builder.setMessage("Please Connect To The Internet")
                 .setCancelable(false)
                 .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -61,39 +57,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void myWebView() {
-
-        myWebView = (WebView) findViewById(R.id.webView);
-
-        WebSettings webSettings = myWebView.getSettings();
-
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setSavePassword(true);
-        webSettings.setGeolocationEnabled(true);
-        webSettings.setAppCacheEnabled(true);
-
-        myWebView.setWebViewClient(new WebViewClient());
-        myWebView.setSoundEffectsEnabled(true);
-        myWebView.requestFocus();
-
-
-        getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(Color.parseColor("#6b8e23"))
-        );
-
-        myWebView.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int newProgress) {
-            }
-        });
-
-
         WebSettings settings = myWebView.getSettings();
 
-        myWebView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-
+        settings.setJavaScriptEnabled(true);
+        settings.setSavePassword(true);
+        settings.setGeolocationEnabled(true);
+        settings.setAppCacheEnabled(true);
         settings.setBuiltInZoomControls(true);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
 
+
+        myWebView.setWebViewClient(new WebViewClient());
+        myWebView.setSoundEffectsEnabled(true);
+        myWebView.requestFocus();
+        myWebView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        myWebView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int newProgress) {
+            }
+        });
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(Color.parseColor("#6b8e23"))
+        );
+        startProgress();
+
+    }
+
+    private void startProgress() {
         final ProgressDialog progressBar = new ProgressDialog(MainActivity.this);
         progressBar.setMessage("Please Wait While We Process Your Request");
         myWebView.loadUrl("https://murmuring-woodland-75772.herokuapp.com");
@@ -108,8 +98,17 @@ public class MainActivity extends AppCompatActivity {
                 super.onPageStarted(view, url, favicon);
                 if (!progressBar.isShowing()) {
                     progressBar.show();
-                }
+                    myWebView.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(final View v, final MotionEvent event) {
+                            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                event.setLocation(myWebView.getWidth() + 1, myWebView.getHeight() + 1);
+                            }
+                            return event.getAction() == MotionEvent.ACTION_UP;
+                        }
+                    });
 
+                }
             }
 
             public void onPageFinished(WebView view, String url) {
@@ -121,10 +120,10 @@ public class MainActivity extends AppCompatActivity {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 if (progressBar.isShowing()) {
                     progressBar.dismiss();
+
                 }
             }
         });
-
     }
 
     @Override
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Are you sure you want to exit?")
+            builder.setMessage("Are you sure You Want To Exit?")
                     .setCancelable(false)
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
