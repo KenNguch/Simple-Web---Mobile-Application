@@ -2,12 +2,10 @@ package com.example.kwsinventory;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +13,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,12 +22,18 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     private WebView myWebView;
+    private Button myButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         trigger();
+
+
     }
 
     private void trigger() {
@@ -44,14 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Connect to wifi or quit")
+        builder.setMessage("Please Connect To Internet")
                 .setCancelable(false)
-                .setPositiveButton("Connect to WIFI", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                    }
-                })
-                .setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         finish();
                     }
@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-
 
     private void myWebView() {
 
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         webSettings.setJavaScriptEnabled(true);
         webSettings.setSavePassword(true);
-        webSettings.setLightTouchEnabled(true);
         webSettings.setGeolocationEnabled(true);
         webSettings.setAppCacheEnabled(true);
 
@@ -111,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!progressBar.isShowing()) {
                     progressBar.show();
                 }
+
             }
 
             public void onPageFinished(WebView view, String url) {
@@ -130,18 +129,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.reload_btn:
+                myWebView.loadUrl("javascript:window.location.reload( true )");
+                return true;
+            case R.id.Exit:
+                finish();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     @Override
