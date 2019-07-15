@@ -7,10 +7,11 @@
         android:id="@+id/reload_btn"
         android:icon="@drawable/action_refresh"
         android:title="@string/refresh" />
+
     <item
         android:id="@+id/Exit"
         android:icon="@drawable/action_exit"
         android:title="@string/exit"
-
         />
+
 </menu>

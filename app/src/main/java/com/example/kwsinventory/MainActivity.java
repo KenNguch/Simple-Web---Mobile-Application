@@ -3,8 +3,6 @@ package com.example.kwsinventory;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myWebView = (WebView) findViewById(R.id.webView);
-
         trigger();
     }
 
@@ -67,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
 
-
         myWebView.setWebViewClient(new WebViewClient());
         myWebView.setSoundEffectsEnabled(true);
         myWebView.requestFocus();
@@ -76,9 +72,7 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(WebView view, int newProgress) {
             }
         });
-        getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(Color.parseColor("#6b8e23"))
-        );
+
         startProgress();
 
     }
@@ -86,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private void startProgress() {
         final ProgressDialog progressBar = new ProgressDialog(MainActivity.this);
         progressBar.setMessage("Please Wait While We Process Your Request");
-        myWebView.loadUrl("https://murmuring-woodland-75772.herokuapp.com");
+        myWebView.loadUrl("https://kenya-forest-management-system.herokuapp.com/");
         myWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
